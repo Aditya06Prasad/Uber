@@ -16,9 +16,11 @@ app.use(express.urlencoded({ extented: true }));
 
 app.get('/',  (req, res) => { 
     res.send("Its working");
+    
 })
 
 app.use('/users', userRoutes)
 
 module.exports = app
+
 
