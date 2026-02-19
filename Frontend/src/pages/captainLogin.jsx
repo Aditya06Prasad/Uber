@@ -25,8 +25,7 @@ const CaptainLogin = () => {
         <img
           className="w-40 h-auto object-contain mb-2"
           src="/images/Uber-Captain-Logo.png"
-          alt="Uber"
-        />
+          alt="Uber"/>
 
         <div className="w-full max-w-sm">
           <form onSubmit={(e) => submitHandler(e)} className="flex flex-col">
@@ -73,7 +72,6 @@ const CaptainLogin = () => {
         </div>
       </div>
 
-      {/* Bottom Yellow Banner */}
       <Link
         to="/login"
         className="flex items-center justify-center w-full bg-yellow-500 text-white py-3 rounded text-lg font-medium mb-6"
