@@ -1,8 +1,8 @@
 import React from 'react'
 import { Routes, Route } from 'react-router-dom'
 import Home from './pages/home'
-import captainLogin from './pages/captainLogin'
-import captainSignUp from './pages/captainSignUp'
+import CaptainLogin from './pages/captainLogin'
+import CaptainSignUp from './pages/CaptainSignUp'
 import UserLogin from './pages/userLogin'
 import UserSignUp from './pages/UserSignUp'
 
@@ -13,8 +13,8 @@ const App = () => {
         <Route path='/' element ={ <Home/>} />
         <Route path='/signup' element ={ <UserSignUp/>} />
         <Route path='/login' element ={ <UserLogin/>} />
-        <Route path='/captain-signup' element ={ <captainSignUp/>} />
-        <Route path='/captain-login' element ={ <captainLogin/>} />
+        <Route path='/captain-signup' element ={ <CaptainSignUp/>} />
+        <Route path='/captain-login' element ={ <CaptainLogin/>} />
       </Routes>
     </div>
   )
