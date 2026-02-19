@@ -21,7 +21,7 @@ const UserLogin = () => {
     <div className="h-screen w-full bg-white flex flex-col px-6 pt-6">
       
       <img
-        className="w-20 mb-8"
+        className="w-20 mb-4"
         src="/images/Uber-Transparent-Background.png"
         alt="Uber"
       />
@@ -59,9 +59,9 @@ const UserLogin = () => {
             Login
           </button>
 
-          <p className="text-center font-semibold py-3 text-sm">
+          <p className="text-center font-semibold py-3 text-m">
             New here?{" "}
-            <Link to="/captain-signup" className="text-blue-500">
+            <Link to="/signup" className="text-blue-500">
               Create new Account
             </Link>
           </p>
