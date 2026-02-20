@@ -43,7 +43,6 @@ const UserSignup = () => {
       console.log("Signup Error:", error);
     }
 
-    // reset form
     setFullname({ firstname: "", lastname: "" });
     setEmail("");
     setPassword("");

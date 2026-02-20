@@ -12,7 +12,6 @@ const UserLogin = () => {
 
     const submitHandler = async (e) => {
         e.preventDefault();
-
         const loginUser = {
             email: email,
             password: password

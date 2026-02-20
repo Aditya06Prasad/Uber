@@ -1,52 +1,79 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useState, useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { CaptainDataContext } from "../Context/CaptainContext";
 
 const CaptainSignup = () => {
   const [fullname, setFullname] = useState({
-    firstname: '',
-    lastname: ''
+    firstname: "",
+    lastname: "",
   });
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [vehicle, setVehicle] = useState({
-    color: '',
-    plate: '',
-    capacity: '',
-    type: ''
+    color: "",
+    plate: "",
+    capacity: "",
+    type: "",
   });
 
-  const submitHandler = (e) => {
+  const [captain, setCaptain] = useContext(CaptainDataContext);
+  const navigate = useNavigate();
+
+  const submitHandler = async (e) => {
     e.preventDefault();
 
     const captainData = {
-      fullname,
+      fullname: {
+        firstname: fullname.firstname,
+        lastname: fullname.lastname,
+      },
       email,
       password,
-      vehicle
+      vehicle: {
+        colour: vehicle.color,
+        plate: vehicle.plate,
+        capacity: Number(vehicle.capacity),
+        vehicleType: vehicle.type,
+      },
     };
 
-    console.log(captainData);
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/captain/register`,
+        captainData,
+      );
 
-    setFullname({ firstname: '', lastname: '' });
-    setEmail('');
-    setPassword('');
-    setVehicle({ color: '', plate: '', capacity: '', type: '' });
+      if (response.status === 201) {
+        const data = response.data;
+        setCaptain(data.captain);
+
+        alert("Captain Registered Successfully!");
+        navigate("/captain-login");
+      }
+    } catch (error) {
+      console.log("Captain Signup Error:", error);
+    }
+
+    setFullname({ firstname: "", lastname: "" });
+    setEmail("");
+    setPassword("");
+    setVehicle({ color: "", plate: "", capacity: "", type: "" });
   };
 
   return (
     <div className="h-screen w-full bg-white flex flex-col justify-between px-6 pt-6">
-
       <div>
-      <img
-        className="w-24 h-20  object-cover"
-        src="https://staging.svgrepo.com/show/505031/uber-driver.svg"
-        alt="Uber"
-      />
-        <form onSubmit={submitHandler} className="w-full max-w-sm flex flex-col">
-
-          <h3 className="text-xl mb-2 font-medium">
-            What's your name
-          </h3>
+        <img
+          className="w-24 h-20  object-cover"
+          src="https://staging.svgrepo.com/show/505031/uber-driver.svg"
+          alt="Uber"
+        />
+        <form
+          onSubmit={submitHandler}
+          className="w-full max-w-sm flex flex-col"
+        >
+          <h3 className="text-xl mb-2 font-medium">What's your name</h3>
 
           <div className="flex gap-4 mb-5">
             <input
@@ -71,9 +98,7 @@ const CaptainSignup = () => {
             />
           </div>
 
-          <h3 className="text-xl mb-2 font-medium">
-            What's your email
-          </h3>
+          <h3 className="text-xl mb-2 font-medium">What's your email</h3>
 
           <input
             required
@@ -84,9 +109,7 @@ const CaptainSignup = () => {
             className="bg-[#eeeeee] rounded px-3 py-3 border w-full text-lg mb-5 outline-none"
           />
 
-          <h3 className="text-xl mb-2 font-medium">
-            Enter Password
-          </h3>
+          <h3 className="text-xl mb-2 font-medium">Enter Password</h3>
 
           <input
             required
@@ -97,9 +120,7 @@ const CaptainSignup = () => {
             className="bg-[#eeeeee] rounded px-3 py-3 border w-full text-lg mb-5 outline-none"
           />
 
-          <h3 className="text-xl mb-2 font-medium">
-            Vehicle Information
-          </h3>
+          <h3 className="text-xl mb-2 font-medium">Vehicle Information</h3>
 
           <div className="flex gap-4 mb-4">
             <input
@@ -140,29 +161,24 @@ const CaptainSignup = () => {
             <select
               required
               value={vehicle.type}
-              onChange={(e) =>
-                setVehicle({ ...vehicle, type: e.target.value })
-              }
+              onChange={(e) => setVehicle({ ...vehicle, type: e.target.value })}
               className="bg-[#eeeeee] rounded px-3 py-3 border w-1/2 text-lg outline-none"
             >
-              <option value="" disabled>Select Vehicle</option>
+              <option value="" disabled>
+                Select Vehicle
+              </option>
               <option value="car">Car</option>
+              <option value="motorcycle">Motorcycle</option>
               <option value="auto">Auto</option>
-              <option value="bike">Bike</option>
-              <option value="bike">Jet</option>
-              <option value="bike">Rocket</option>
+              <option value="Jet">Jet</option>
+              <option value="Helicopter">Helicopter</option>
+              <option value="Ship">Ship</option>
             </select>
           </div>
 
-          <p className="text-[11px] text-gray-500 mt-1 mb-5 leading-tight">
-            By proceeding, you consent to receive emails, calls, WhatsApp or SMS
-            messages, including by automated means, from Uber and its affiliates
-            regarding your captain account and services.
-          </p>
-
           <button
             type="submit"
-            className="bg-black text-white font-semibold rounded px-3 py-3 w-full text-lg"
+            className="bg-black text-white font-semibold rounded px-3 py-3 w-full mt-3 text-lg"
           >
             Sign Up as Captain
           </button>
@@ -173,15 +189,14 @@ const CaptainSignup = () => {
               Login here
             </Link>
           </p>
-
         </form>
       </div>
 
       <p className="text-xs mb-4 font-bold text-gray-500 mt-4 leading-tight">
-        By proceeding, you consent to get emails, updates, and important notifications,
-        including by automated means, from Uber and its affiliates to the email address provided.
+        By proceeding, you consent to get emails, updates, and important
+        notifications, including by automated means, from Uber and its
+        affiliates to the email address provided.
       </p>
-
     </div>
   );
 };
