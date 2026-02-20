@@ -1,5 +1,7 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { UserDataContext } from "../Context/UserContext";
 
 const UserSignup = () => {
   const [fullname, setFullname] = useState({
@@ -9,17 +11,39 @@ const UserSignup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const submitHandler = (e) => {
+  const [user, setUser] = useContext(UserDataContext);
+  const navigate = useNavigate();
+
+  const submitHandler = async (e) => {
     e.preventDefault();
 
     const newUser = {
-      fullname,
-      email,
-      password,
+      fullname: {
+        firstname: fullname.firstname,
+        lastname: fullname.lastname,
+      },
+      email: email,
+      password: password,
     };
 
-    console.log(newUser);
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/users/register`,
+        newUser
+      );
 
+      if (response.status === 201) {
+        const data = response.data;
+        setUser(data.user); 
+
+        alert("User Registered Successfully! You can now Login"); 
+        navigate("/login"); 
+      }
+    } catch (error) {
+      console.log("Signup Error:", error);
+    }
+
+    // reset form
     setFullname({ firstname: "", lastname: "" });
     setEmail("");
     setPassword("");
@@ -33,6 +57,7 @@ const UserSignup = () => {
           src="/images/Uber-Transparent-Background.png"
           alt="Uber"
         />
+
         <form
           onSubmit={submitHandler}
           className="w-full max-w-sm flex flex-col"
@@ -92,7 +117,7 @@ const UserSignup = () => {
           </button>
 
           <p className="text-center font-medium py-4 text-base">
-            Already have a account?{" "}
+            Already have an account?{" "}
             <Link to="/login" className="text-blue-600">
               Login here
             </Link>

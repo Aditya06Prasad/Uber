@@ -1,6 +1,7 @@
 import React from 'react'
 import { Routes, Route } from 'react-router-dom'
-import Home from './pages/home'
+import Start from './pages/Start'
+import Home from './pages/Start'
 import CaptainLogin from './pages/captainLogin'
 import CaptainSignUp from './pages/CaptainSignUp'
 import UserLogin from './pages/userLogin'
@@ -10,7 +11,8 @@ const App = () => {
   return (
     <div>
       <Routes>
-        <Route path='/' element ={ <Home/>} />
+        <Route path='/' element ={ <Start/>} />
+        <Route path='/home' element ={ <Home/>} />
         <Route path='/signup' element ={ <UserSignUp/>} />
         <Route path='/login' element ={ <UserLogin/>} />
         <Route path='/captain-signup' element ={ <CaptainSignUp/>} />
