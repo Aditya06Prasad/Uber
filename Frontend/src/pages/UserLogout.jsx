@@ -1,10 +1,18 @@
-import React from 'react'
-import axios from 'axios'
+import { useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { UserDataContext } from "../Context/UserContext";
 
 const UserLogout = () => {
-  return (
-    <div>UserLogout</div>
-  )
-}
+  const navigate = useNavigate();
+  const { setUser } = useContext(UserDataContext);
 
-export default UserLogout
+  useEffect(() => {
+    localStorage.removeItem("userToken");
+    setUser(null);
+    navigate("/login");
+  }, [navigate, setUser]);
+
+  return null;
+};
+
+export default UserLogout;
