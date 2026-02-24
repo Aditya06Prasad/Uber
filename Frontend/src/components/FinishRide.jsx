@@ -39,7 +39,7 @@ const FinishRide = (props) => {
         <div className="flex items-center gap-3 ">
           <img
             className="h-12 rounded-full object-cover w-12"
-            src="https://i.pinimg.com/236x/af/26/28/af26280b0ca305be47df0b799ed1b12b.jpg"
+            src="/images/UberDriver1.png"
             alt=""
           />
           <h2 className="text-lg font-medium">

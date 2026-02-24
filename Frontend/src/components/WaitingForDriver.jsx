@@ -1,68 +1,64 @@
 import React from "react";
 
-const WaitingForDriver = ({ setShowWaitingForDriver }) => {
+const WaitingForDriver = (props) => {
   return (
-    <div className="relative w-full bg-white">
+    <div>
+      <h5
+        className="p-1 text-center w-[93%] absolute top-0"
+        onClick={() => {
+          props.waitingForDriver(false);
+        }}
+      >
+        <i className="text-3xl text-gray-200 ri-arrow-down-wide-line"></i>
+      </h5>
 
-      <div className="flex justify-center py-2">
-        <button
-          onClick={() => setShowWaitingForDriver(false)}
-          className="text-2xl text-gray-500"
-        >
-          <i className="ri-arrow-down-wide-line"></i>
-        </button>
-      </div>
-
-      <div className="flex items-center justify-between px-5 py-4 border-b">
-        <h2 className="text-xl font-semibold">
-          Meet at the pickup point
-        </h2>
-
-        <div className="bg-black text-white px-4 py-2 text-center rounded-md">
-          <p className="text-lg font-semibold leading-none">2</p>
-          <p className="text-xs leading-none">min</p>
-        </div>
-      </div>
-
-      <div className="flex items-center justify-between px-5 py-4 border-b">
-
-        <div className="flex items-center gap-3">
-          <img
-            src="/images/UberDriver.jpg"
-            alt="Driver"
-            className="w-14 h-14 rounded-full object-cover"
-          />
-
-          <img
-            src="/images/UberCar.png"
-            alt="Car"
-            className="h-10"
-          />
-        </div>
-
+      <div className="flex items-center justify-between">
+        <img
+          className="h-12"
+          src="/images/UberCar.png"
+          alt=""
+        />
         <div className="text-right">
-          <p className="text-sm text-gray-500">SANTH</p>
-          <h3 className="text-2xl font-bold">KA15AK00-0</h3>
-          <p className="text-gray-600 text-sm">
-            White Suzuki S-Presso LXI
-          </p>
-          <div className="flex items-center justify-end gap-1 mt-1">
-            <i className="ri-star-fill text-black"></i>
-            <span className="text-sm">4.9</span>
+          <h2 className="text-lg font-medium capitalize">
+            {props.ride?.captain.fullname.firstname}
+          </h2>
+          <h4 className="text-xl font-semibold -mt-1 -mb-1">
+            {props.ride?.captain.vehicle.plate}
+          </h4>
+          <p className="text-sm text-gray-600">Maruti Suzuki Alto</p>
+          <h1 className="text-lg font-semibold"> {props.ride?.otp} </h1>
+        </div>
+      </div>
+
+      <div className="flex gap-2 justify-between flex-col items-center">
+        <div className="w-full mt-5">
+          <div className="flex items-center gap-5 p-3 border-b-2">
+            <i className="ri-map-pin-user-fill"></i>
+            <div>
+              <h3 className="text-lg font-medium">562/11-A</h3>
+              <p className="text-sm -mt-1 text-gray-600">
+                {props.ride?.pickup}
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-5 p-3 border-b-2">
+            <i className="text-lg ri-map-pin-2-fill"></i>
+            <div>
+              <h3 className="text-lg font-medium">562/11-A</h3>
+              <p className="text-sm -mt-1 text-gray-600">
+                {props.ride?.destination}
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-5 p-3">
+            <i className="ri-currency-line"></i>
+            <div>
+              <h3 className="text-lg font-medium">₹{props.ride?.fare} </h3>
+              <p className="text-sm -mt-1 text-gray-600">Cash Cash</p>
+            </div>
           </div>
         </div>
       </div>
-
-      <div className="flex items-start gap-3 px-5 py-4">
-        <i className="ri-map-pin2-fill text-lg"></i>
-        <div>
-          <h4 className="font-semibold text-lg">562/11-A</h4>
-          <p className="text-gray-600 text-sm">
-            Kaikondrahalli, Bengaluru, Karnataka
-          </p>
-        </div>
-      </div>
-
     </div>
   );
 };
