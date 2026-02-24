@@ -75,7 +75,7 @@ const Home = () => {
       {!panel && (
         <img
           className="absolute top-6 left-6 w-20 z-50"
-          src="/images/Uber-Transparent-Background.png"
+          src="/images/Ub  er-Transparent-Background.png"
           alt="Uber"
         />
       )}

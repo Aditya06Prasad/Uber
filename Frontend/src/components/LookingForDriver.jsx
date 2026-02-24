@@ -4,12 +4,12 @@ const LookingForDriver = ({ setShowVehicleFound }) => {
   return (
         <div className="relative w-full px-4 pb-6">
 
-      <div className="flex justify-center mb-3">
+      <div className="flex justify-end mb-3">
         <button
           onClick={() => setShowVehicleFound(false)}
           className="text-2xl text-gray-500"
         >
-          <i className="ri-arrow-down-wide-line"></i>
+          <i className="ri-skip-left-line right-2"></i>
         </button>
       </div>
 
@@ -23,6 +23,7 @@ const LookingForDriver = ({ setShowVehicleFound }) => {
           alt="Car"
           className="h-20"
         />
+        ..
       </div>
 
       <div className="flex items-center gap-3 py-3 border-b">

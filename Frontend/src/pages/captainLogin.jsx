@@ -67,12 +67,10 @@ const CaptainLogin = () => {
             className="bg-[#eeeeee] rounded px-3 py-3 border w-full text-lg mb-6 outline-none"
           />
 
-          <button
+          <Link to='/captain-home'
             type="submit"
-            className="bg-black text-white font-semibold rounded px-3 py-3 w-full text-lg"
-          >
-            Login
-          </button>
+            className="bg-black text-white font-semibold rounded px-32 py-3 w-full text-lg">Login
+          </Link>
 
           <p className="text-center font-semibold py-3 text-m">
             Join a Fleet?{" "}
