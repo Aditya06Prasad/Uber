@@ -1,18 +1,25 @@
-import { useEffect, useContext } from "react";
+import React from "react";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { UserDataContext } from "../Context/UserContext";
 
-const UserLogout = () => {
+export const UserLogout = () => {
+  const token = localStorage.getItem("token");
   const navigate = useNavigate();
-  const { setUser } = useContext(UserDataContext);
 
-  useEffect(() => {
-    localStorage.removeItem("userToken");
-    setUser(null);
-    navigate("/login");
-  }, [navigate, setUser]);
+  axios
+    .get(`${import.meta.env.VITE_API_URL}/users/logout`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    .then((response) => {
+      if (response.status === 200) {
+        localStorage.removeItem("token");
+        navigate("/login");
+      }
+    });
 
-  return null;
+  return <div>UserLogout</div>;
 };
 
 export default UserLogout;

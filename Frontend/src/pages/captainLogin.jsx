@@ -1,94 +1,99 @@
-import { useState, useContext } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { CaptainDataContext } from "../Context/CaptainContext";
+import { CaptainDataContext } from "../context/CapatainContext";
 
-const CaptainLogin = () => {
+const Captainlogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const [captain, setCaptain] = useContext(CaptainDataContext);
+  const { captain, setCaptain } = React.useContext(CaptainDataContext);
   const navigate = useNavigate();
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    const loginCaptain = {
+    const captain = {
       email: email,
-      password: password,
+      password,
     };
 
-    try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/captain/login`,
-        loginCaptain,
-      );
+    const response = await axios.post(
+      `${import.meta.env.VITE_BASE_URL}/captains/login`,
+      captain,
+    );
 
-      if (response.status === 200) {
-        const data = response.data;
-        setCaptain(data.captain);
-        navigate("/");
-      }
-    } catch (error) {
-      console.log("Login Error:", error);
+    if (response.status === 200) {
+      const data = response.data;
+
+      setCaptain(data.captain);
+      localStorage.setItem("token", data.token);
+      navigate("/captain-home");
     }
+
     setEmail("");
     setPassword("");
   };
-
   return (
-    <div className="h-screen w-full bg-white flex flex-col px-6 pt-3">
-      <img
-        className="w-24 h-20  object-cover"
-        src="https://staging.svgrepo.com/show/505031/uber-driver.svg"
-        alt="Uber"
-      />
+    <div className="p-7 h-screen flex flex-col justify-between">
+      <div>
+        <img
+          className="w-20 mb-3"
+          src="https://www.svgrepo.com/show/505031/uber-driver.svg"
+          alt=""
+        />
 
-      <div className="w-full mt-3">
-        <form onSubmit={(e) => submitHandler(e)} className="flex flex-col">
-          <h3 className="text-xl mb-2 font-medium">What's your email</h3>
-
+        <form
+          onSubmit={(e) => {
+            submitHandler(e);
+          }}
+        >
+          <h3 className="text-lg font-medium mb-2">What's your email</h3>
           <input
             required
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => {
+              setEmail(e.target.value);
+            }}
+            className="bg-[#eeeeee] mb-7 rounded-lg px-4 py-2 border w-full text-lg placeholder:text-base"
             type="email"
-            placeholder="Captain@gmail.com"
-            className="bg-[#eeeeee] rounded px-3 py-3 border w-full text-lg mb-4 outline-none"
+            placeholder="email@example.com"
           />
 
-          <h3 className="text-xl mb-2 font-medium">Enter Password</h3>
+          <h3 className="text-lg font-medium mb-2">Enter Password</h3>
 
           <input
-            required
+            className="bg-[#eeeeee] mb-7 rounded-lg px-4 py-2 border w-full text-lg placeholder:text-base"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => {
+              setPassword(e.target.value);
+            }}
+            required
             type="password"
             placeholder="password"
-            className="bg-[#eeeeee] rounded px-3 py-3 border w-full text-lg mb-6 outline-none"
           />
 
-          <Link to='/captain-home'
-            type="submit"
-            className="bg-black text-white font-semibold rounded px-32 py-3 w-full text-lg">Login
-          </Link>
-
-          <p className="text-center font-semibold py-3 text-m">
-            Join a Fleet?{" "}
-            <Link to="/captain-signup" className="text-blue-500">
-              Register Here
-            </Link>
-          </p>
+          <button className="bg-[#111] text-white font-semibold mb-3 rounded-lg px-4 py-2 w-full text-lg placeholder:text-base">
+            Login
+          </button>
         </form>
+        <p className="text-center">
+          Join a fleet?{" "}
+          <Link to="/captain-signup" className="text-blue-600">
+            Register as a Captain
+          </Link>
+        </p>
       </div>
-
-      <Link
-        to="/login"
-        className="flex items-center justify-center w-full bg-yellow-400 mt-42 text-white py-3 rounded text-lg font-medium"
-      >
-        Sign in as User
-      </Link>
+      <div>
+        <Link
+          to="/login"
+          className="bg-[#d5622d] flex items-center justify-center text-white font-semibold mb-5 rounded-lg px-4 py-2 w-full text-lg placeholder:text-base"
+        >
+          Sign in as User
+        </Link>
+      </div>
     </div>
   );
 };
 
-export default CaptainLogin;
+export default Captainlogin;
