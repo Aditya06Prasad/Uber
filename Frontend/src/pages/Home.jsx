@@ -8,32 +8,34 @@ import VehiclePanel from "../components/VehiclePanel";
 import ConfirmRide from "../components/ConfirmRide";
 import LookingForDriver from "../components/LookingForDriver";
 import WaitingForDriver from "../components/WaitingForDriver";
-import { SocketContext } from "../context/SocketContext";
+import { SocketContext } from "../context/SocketDataContext";
 import { useContext } from "react";
-import { UserDataContext } from "../context/UserContext";
+import { UserDataContext } from "../context/UserDataContext";
 import { useNavigate } from "react-router-dom";
 import LiveTracking from "../components/LiveTracking";
 
 const Home = () => {
   const [pickup, setPickup] = useState("");
   const [destination, setDestination] = useState("");
-  const [panelOpen, setPanelOpen] = useState(false);
+  const [pickupSuggestions, setPickupSuggestions] = useState([]);
+  const [fare, setFare] = useState({});
+  const [destinationSuggestions, setDestinationSuggestions] = useState([]);
+
   const vehiclePanelRef = useRef(null);
   const confirmRidePanelRef = useRef(null);
   const vehicleFoundRef = useRef(null);
   const waitingForDriverRef = useRef(null);
   const panelRef = useRef(null);
   const panelCloseRef = useRef(null);
+  const [activeField, setActiveField] = useState(null);
+  const [vehicleType, setVehicleType] = useState(null);
+  const [ride, setRide] = useState(null);
+
+  const [panelOpen, setPanelOpen] = useState(false);
   const [vehiclePanel, setVehiclePanel] = useState(false);
   const [confirmRidePanel, setConfirmRidePanel] = useState(false);
   const [vehicleFound, setVehicleFound] = useState(false);
   const [waitingForDriver, setWaitingForDriver] = useState(false);
-  const [pickupSuggestions, setPickupSuggestions] = useState([]);
-  const [destinationSuggestions, setDestinationSuggestions] = useState([]);
-  const [activeField, setActiveField] = useState(null);
-  const [fare, setFare] = useState({});
-  const [vehicleType, setVehicleType] = useState(null);
-  const [ride, setRide] = useState(null);
 
   const navigate = useNavigate();
 
@@ -41,20 +43,29 @@ const Home = () => {
   const { user } = useContext(UserDataContext);
 
   useEffect(() => {
+    if (!socket || !user?._id) return;
+
     socket.emit("join", { userType: "user", userId: user._id });
-  }, [user]);
 
-  socket.on("ride-confirmed", (ride) => {
-    setVehicleFound(false);
-    setWaitingForDriver(true);
-    setRide(ride);
-  });
+    const onRideConfirmed = (confirmedRide) => {
+      setVehicleFound(false);
+      setWaitingForDriver(true);
+      setRide(confirmedRide);
+    };
 
-  socket.on("ride-started", (ride) => {
-    console.log("ride");
-    setWaitingForDriver(false);
-    navigate("/riding", { state: { ride } }); // Updated navigate to include ride data
-  });
+    const onRideStarted = (startedRide) => {
+      setWaitingForDriver(false);
+      navigate("/riding", { state: { ride: startedRide } });
+    };
+
+    socket.on("ride-confirmed", onRideConfirmed);
+    socket.on("ride-started", onRideStarted);
+
+    return () => {
+      socket.off("ride-confirmed", onRideConfirmed);
+      socket.off("ride-started", onRideStarted);
+    };
+  }, [socket, user?._id, navigate]);
 
   const handlePickupChange = async (e) => {
     setPickup(e.target.value);
@@ -198,20 +209,36 @@ const Home = () => {
     setFare(response.data);
   }
 
-  async function createRide() {
-    const response = await axios.post(
-      `${import.meta.env.VITE_BASE_URL}/rides/create`,
-      {
-        pickup,
-        destination,
-        vehicleType,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+  async function createRide(selectedVehicleType = vehicleType) {
+    if (!pickup || !destination || !selectedVehicleType) {
+      alert("Please select pickup, destination, and vehicle type.");
+      return false;
+    }
+
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/rides/create`,
+        {
+          pickup,
+          destination,
+          vehicleType: selectedVehicleType,
         },
-      },
-    );
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        },
+      );
+
+      setRide(response.data);
+      return true;
+    } catch (error) {
+      const message =
+        error?.response?.data?.message ||
+        "Could not create ride. Please try again.";
+      alert(message);
+      return false;
+    }
   }
 
   return (

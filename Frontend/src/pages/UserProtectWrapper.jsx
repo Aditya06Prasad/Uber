@@ -1,12 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
-import { UserDataContext } from "../context/UserContext";
+import { UserDataContext } from "../context/UserDataContext";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const UserProtectWrapper = ({ children }) => {
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
-  const { user, setUser } = useContext(UserDataContext);
+  const { setUser } = useContext(UserDataContext);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -31,7 +31,7 @@ const UserProtectWrapper = ({ children }) => {
         localStorage.removeItem("token");
         navigate("/login");
       });
-  }, [token]);
+  }, [token, navigate, setUser]);
 
   if (isLoading) {
     return <div>Loading...</div>;

@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom"; // Added useLocation
 import { useEffect, useContext } from "react";
-import { SocketContext } from "../context/SocketContext";
+import { SocketContext } from "../context/SocketDataContext";
 import { useNavigate } from "react-router-dom";
 import LiveTracking from "../components/LiveTracking";
 
@@ -11,9 +11,16 @@ const Riding = () => {
   const { socket } = useContext(SocketContext);
   const navigate = useNavigate();
 
-  socket.on("ride-ended", () => {
-    navigate("/home");
-  });
+  useEffect(() => {
+    if (!socket) return;
+
+    const onRideEnded = () => {
+      navigate("/home");
+    };
+
+    socket.on("ride-ended", onRideEnded);
+    return () => socket.off("ride-ended", onRideEnded);
+  }, [socket, navigate]);
 
   return (
     <div className="h-screen">

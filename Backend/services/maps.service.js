@@ -3,10 +3,14 @@ const captainModel = require("../models/captain.model");
 
 module.exports.getAddressCoordinate = async (address) => {
   const apiKey = process.env.GOOGLE_MAPS_API;
+  if (!apiKey) {
+    throw new Error("Google Maps API key is not configured");
+  }
   const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${apiKey}`;
 
   try {
     const response = await axios.get(url);
+    console.log("Google response:", response.data);
     if (response.data.status === "OK") {
       const location = response.data.results[0].geometry.location;
       return {
@@ -28,6 +32,9 @@ module.exports.getDistanceTime = async (origin, destination) => {
   }
 
   const apiKey = process.env.GOOGLE_MAPS_API;
+  if (!apiKey) {
+    throw new Error("Google Maps API key is not configured");
+  }
 
   const url = `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${encodeURIComponent(origin)}&destinations=${encodeURIComponent(destination)}&key=${apiKey}`;
 
@@ -54,33 +61,63 @@ module.exports.getAutoCompleteSuggestions = async (input) => {
   }
 
   const apiKey = process.env.GOOGLE_MAPS_API;
+  if (!apiKey) {
+    throw new Error("Google Maps API key is not configured");
+  }
+
   const url = `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${encodeURIComponent(input)}&key=${apiKey}`;
 
   try {
     const response = await axios.get(url);
-    if (response.data.status === "OK") {
+    console.log("Places API response:", response.data);
+
+    const status = response.data && response.data.status;
+    if (status === "OK") {
       return response.data.predictions
         .map((prediction) => prediction.description)
         .filter((value) => value);
-    } else {
-      throw new Error("Unable to fetch suggestions");
     }
+
+    const errorMessage = response.data && response.data.error_message;
+    const msg = errorMessage ? `Places API error: ${errorMessage}` : `Places API status: ${status}`;
+    throw new Error(msg);
   } catch (err) {
-    console.error(err);
+    console.error("Autocomplete error:", err.response ? err.response.data : err.message);
     throw err;
   }
 };
 
 module.exports.getCaptainsInTheRadius = async (ltd, lng, radius) => {
-  // radius in km
-
   const captains = await captainModel.find({
-    location: {
-      $geoWithin: {
-        $centerSphere: [[ltd, lng], radius / 6371],
-      },
-    },
+    "location.ltd": { $ne: null },
+    "location.lng": { $ne: null },
   });
 
-  return captains;
+  // Use Haversine distance because captain location is stored as plain numbers, not GeoJSON.
+  const toRadians = (value) => (value * Math.PI) / 180;
+  const earthRadiusKm = 6371;
+
+  return captains.filter((captain) => {
+    const captainLat = captain.location?.ltd;
+    const captainLng = captain.location?.lng;
+
+    if (typeof captainLat !== "number" || typeof captainLng !== "number") {
+      return false;
+    }
+
+    const dLat = toRadians(captainLat - ltd);
+    const dLng = toRadians(captainLng - lng);
+
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(toRadians(ltd)) *
+        Math.cos(toRadians(captainLat)) *
+        Math.sin(dLng / 2) *
+        Math.sin(dLng / 2);
+
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distance = earthRadiusKm * c;
+
+    return distance <= radius;
+  });
 };

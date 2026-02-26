@@ -8,7 +8,7 @@ export const UserLogout = () => {
 
   axios
     .get(`${import.meta.env.VITE_API_URL}/users/logout`, {
-      headers: {
+      headers: { 
         Authorization: `Bearer ${token}`,
       },
     })

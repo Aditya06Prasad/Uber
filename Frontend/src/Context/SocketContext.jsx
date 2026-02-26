@@ -1,7 +1,6 @@
-import React, { createContext, useEffect } from "react";
+import React, { useEffect } from "react";
 import { io } from "socket.io-client";
-
-export const SocketContext = createContext();
+import { SocketContext } from "./SocketDataContext";
 
 const socket = io(`${import.meta.env.VITE_BASE_URL}`); // Replace with your server URL
 
@@ -15,6 +14,11 @@ const SocketProvider = ({ children }) => {
     socket.on("disconnect", () => {
       console.log("Disconnected from server");
     });
+
+    return () => {
+      socket.off("connect");
+      socket.off("disconnect");
+    };
   }, []);
 
   return (

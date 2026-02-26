@@ -1,12 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
-import { CaptainDataContext } from "../context/CapatainContext";
+import { CaptainDataContext } from "../context/CaptainDataContext";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const CaptainProtectWrapper = ({ children }) => {
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
-  const { captain, setCaptain } = useContext(CaptainDataContext);
+  const { setCaptain } = useContext(CaptainDataContext);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -26,11 +26,11 @@ const CaptainProtectWrapper = ({ children }) => {
           setIsLoading(false);
         }
       })
-      .catch((err) => {
+      .catch(() => {
         localStorage.removeItem("token");
         navigate("/captain-login");
       });
-  }, [token]);
+  }, [token, navigate, setCaptain]);
 
   if (isLoading) {
     return <div>Loading...</div>;

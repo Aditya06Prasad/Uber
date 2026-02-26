@@ -45,10 +45,12 @@ const ConfirmRide = (props) => {
           </div>
         </div>
         <button
-          onClick={() => {
+          onClick={async () => {
+            const isCreated = await props.createRide(props.vehicleType);
+            if (!isCreated) return;
+
             props.setVehicleFound(true);
             props.setConfirmRidePanel(false);
-            props.createRide();
           }}
           className="w-full mt-5 bg-green-600 text-white font-semibold p-2 rounded-lg"
         >

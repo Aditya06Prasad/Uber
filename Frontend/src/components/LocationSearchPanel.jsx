@@ -2,8 +2,6 @@ import React from "react";
 
 const LocationSearchPanel = ({
   suggestions,
-  setVehiclePanel,
-  setPanelOpen,
   setPickup,
   setDestination,
   activeField,

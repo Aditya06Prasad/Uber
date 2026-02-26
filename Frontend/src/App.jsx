@@ -2,8 +2,8 @@ import React from 'react'
 import { Routes, Route } from 'react-router-dom'
 import Start from './pages/Start'
 import Home from './pages/Home'
-import CaptainLogin from './pages/CaptainLogin'
-import CaptainSignUp from './pages/CaptainSignUp'
+import CaptainLogin from './pages/captainLogin'
+import CaptainSignup from './pages/captainSignUp'
 import CaptainHome from './pages/CaptainHome'
 import UserLogin from './pages/UserLogin'
 import UserSignUp from './pages/UserSignUp'
@@ -14,14 +14,13 @@ import CaptainRiding from './pages/CaptainRiding'
 
 const App = () => {
   return (
-    <div>
-      <Routes>
+    <Routes>
         <Route path='/' element ={ <Start/>} />
         <Route path='/home' element ={ <Home/>} />
         <Route path='/signup' element ={ <UserSignUp/>} />
         <Route path='/login' element ={ <UserLogin/>} />
         <Route path='/riding' element= { <Riding/> } />
-        <Route path='/captain-signup' element ={ <CaptainSignUp/>} />
+        <Route path='/captain-signup' element ={ <CaptainSignup/>} />
         <Route path='/captain-login' element ={ <CaptainLogin/>} />
         <Route path='/captain-home' element ={ <CaptainHome/>} />
         <Route path='/captain-riding' element ={ <CaptainRiding/>} />
@@ -29,9 +28,10 @@ const App = () => {
         <Route path="/logout" element={<UserLogout />} />
         <Route path="/captain-logout" element={<CaptainLogout />} />
       </Routes>
-    </div>
   )
 }
 
 
 export default App
+
+// npm i @react-google-maps/api

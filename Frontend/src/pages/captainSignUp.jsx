@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { CaptainDataContext } from "../context/CapatainContext";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { CaptainDataContext } from "../context/CaptainDataContext";
 
 const CaptainSignup = () => {
   const navigate = useNavigate();
@@ -17,7 +17,7 @@ const CaptainSignup = () => {
   const [vehicleCapacity, setVehicleCapacity] = useState("");
   const [vehicleType, setVehicleType] = useState("");
 
-  const { captain, setCaptain } = React.useContext(CaptainDataContext);
+  const { setCaptain } = React.useContext(CaptainDataContext);
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -31,7 +31,7 @@ const CaptainSignup = () => {
       vehicle: {
         color: vehicleColor,
         plate: vehiclePlate,
-        capacity: vehicleCapacity,
+        capacity: Number(vehicleCapacity), 
         vehicleType: vehicleType,
       },
     };
@@ -171,7 +171,7 @@ const CaptainSignup = () => {
               </option>
               <option value="car">Car</option>
               <option value="auto">Auto</option>
-              <option value="moto">Moto</option>
+              <option value="moto">motorcycle</option>
             </select>
           </div>
 
