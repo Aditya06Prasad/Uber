@@ -233,6 +233,12 @@ const Home = () => {
       setRide(response.data);
       return true;
     } catch (error) {
+      if (error?.response?.status === 401) {
+        localStorage.removeItem("token");
+        navigate("/login");
+        return false;
+      }
+
       const message =
         error?.response?.data?.message ||
         "Could not create ride. Please try again.";

@@ -1,6 +1,9 @@
 import React from "react";
 
 const RidePopUp = (props) => {
+  const firstName = props.ride?.user?.fullname?.firstname || "Rider";
+  const lastName = props.ride?.user?.fullname?.lastname || "";
+
   return (
     <div>
       <h5
@@ -19,11 +22,7 @@ const RidePopUp = (props) => {
             src="/images/UberDriver1.png"
             alt=""
           />
-          <h2 className="text-lg font-medium">
-            {props.ride?.user.fullname.firstname +
-              " " +
-              props.ride?.user.fullname.lastname}
-          </h2>
+          <h2 className="text-lg font-medium">{`${firstName} ${lastName}`.trim()}</h2>
         </div>
         <h5 className="text-lg font-semibold">2.2 KM</h5>
       </div>
@@ -33,9 +32,7 @@ const RidePopUp = (props) => {
             <i className="ri-map-pin-user-fill"></i>
             <div>
               <h3 className="text-lg font-medium">562/11-A</h3>
-              <p className="text-sm -mt-1 text-gray-600">
-                {props.ride?.pickup}
-              </p>
+              <p className="text-sm -mt-1 text-gray-600">{props.ride?.pickup}</p>
             </div>
           </div>
           <div className="flex items-center gap-5 p-3 border-b-2">
@@ -50,7 +47,7 @@ const RidePopUp = (props) => {
           <div className="flex items-center gap-5 p-3">
             <i className="ri-currency-line"></i>
             <div>
-              <h3 className="text-lg font-medium">₹{props.ride?.fare} </h3>
+              <h3 className="text-lg font-medium">Rs. {props.ride?.fare}</h3>
               <p className="text-sm -mt-1 text-gray-600">Cash Cash</p>
             </div>
           </div>

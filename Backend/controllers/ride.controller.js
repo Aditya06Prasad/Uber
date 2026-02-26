@@ -11,6 +11,10 @@ module.exports.createRide = async (req, res) => {
         return res.status(400).json({ errors: errors.array() });
     }
 
+    if (!req.user?._id) {
+        return res.status(401).json({ message: "Unauthorized" });
+    }
+
     const { pickup, destination, vehicleType } = req.body;
 
     try {

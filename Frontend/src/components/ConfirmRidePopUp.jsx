@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
@@ -9,6 +8,8 @@ const ConfirmRidePopUp = (props) => {
 
   const submitHander = async (e) => {
     e.preventDefault();
+
+    if (!props.ride?._id) return;
 
     const response = await axios.get(
       `${import.meta.env.VITE_BASE_URL}/rides/start-ride`,
@@ -29,6 +30,7 @@ const ConfirmRidePopUp = (props) => {
       navigate("/captain-riding", { state: { ride: props.ride } });
     }
   };
+
   return (
     <div>
       <h5
@@ -39,9 +41,7 @@ const ConfirmRidePopUp = (props) => {
       >
         <i className="text-3xl text-gray-200 ri-arrow-down-wide-line"></i>
       </h5>
-      <h3 className="text-2xl font-semibold mb-5">
-        Confirm this ride to Start
-      </h3>
+      <h3 className="text-2xl font-semibold mb-5">Confirm this ride to Start</h3>
       <div className="flex items-center justify-between p-3 border-2 border-yellow-400 rounded-lg mt-4">
         <div className="flex items-center gap-3 ">
           <img
@@ -50,7 +50,7 @@ const ConfirmRidePopUp = (props) => {
             alt=""
           />
           <h2 className="text-lg font-medium capitalize">
-            {props.ride?.user.fullname.firstname}
+            {props.ride?.user?.fullname?.firstname || "Rider"}
           </h2>
         </div>
         <h5 className="text-lg font-semibold">2.2 KM</h5>
@@ -61,9 +61,7 @@ const ConfirmRidePopUp = (props) => {
             <i className="ri-map-pin-user-fill"></i>
             <div>
               <h3 className="text-lg font-medium">562/11-A</h3>
-              <p className="text-sm -mt-1 text-gray-600">
-                {props.ride?.pickup}
-              </p>
+              <p className="text-sm -mt-1 text-gray-600">{props.ride?.pickup}</p>
             </div>
           </div>
           <div className="flex items-center gap-5 p-3 border-b-2">
@@ -78,7 +76,7 @@ const ConfirmRidePopUp = (props) => {
           <div className="flex items-center gap-5 p-3">
             <i className="ri-currency-line"></i>
             <div>
-              <h3 className="text-lg font-medium">₹{props.ride?.fare} </h3>
+              <h3 className="text-lg font-medium">Rs. {props.ride?.fare}</h3>
               <p className="text-sm -mt-1 text-gray-600">Cash Cash</p>
             </div>
           </div>

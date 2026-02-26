@@ -1,5 +1,4 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
@@ -7,6 +6,8 @@ const FinishRide = (props) => {
   const navigate = useNavigate();
 
   async function endRide() {
+    if (!props.ride?._id) return;
+
     const response = await axios.post(
       `${import.meta.env.VITE_BASE_URL}/rides/end-ride`,
       {
@@ -43,7 +44,7 @@ const FinishRide = (props) => {
             alt=""
           />
           <h2 className="text-lg font-medium">
-            {props.ride?.user.fullname.firstname}
+            {props.ride?.user?.fullname?.firstname || "Rider"}
           </h2>
         </div>
         <h5 className="text-lg font-semibold">2.2 KM</h5>
@@ -54,9 +55,7 @@ const FinishRide = (props) => {
             <i className="ri-map-pin-user-fill"></i>
             <div>
               <h3 className="text-lg font-medium">562/11-A</h3>
-              <p className="text-sm -mt-1 text-gray-600">
-                {props.ride?.pickup}
-              </p>
+              <p className="text-sm -mt-1 text-gray-600">{props.ride?.pickup}</p>
             </div>
           </div>
           <div className="flex items-center gap-5 p-3 border-b-2">
@@ -71,7 +70,7 @@ const FinishRide = (props) => {
           <div className="flex items-center gap-5 p-3">
             <i className="ri-currency-line"></i>
             <div>
-              <h3 className="text-lg font-medium">₹{props.ride?.fare} </h3>
+              <h3 className="text-lg font-medium">Rs. {props.ride?.fare}</h3>
               <p className="text-sm -mt-1 text-gray-600">Cash Cash</p>
             </div>
           </div>
@@ -80,7 +79,7 @@ const FinishRide = (props) => {
         <div className="mt-10 w-full">
           <button
             onClick={endRide}
-            className="w-full mt-5 flex  text-lg justify-center bg-green-600 text-white font-semibold p-3 rounded-lg"
+            className="w-full mt-5 flex text-lg justify-center bg-green-600 text-white font-semibold p-3 rounded-lg"
           >
             Finish Ride
           </button>
